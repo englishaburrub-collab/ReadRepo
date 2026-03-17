@@ -1,10 +1,97 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>My Site</title>
-  </head>
-  <body>
-    <h1>Hello world 🎉</h1>
-    <p>This is my GitHub Pages website.</p>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vue Counter Test</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+    }
+
+    .card {
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 320px;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 1.6rem;
+    }
+
+    .count {
+      font-size: 3rem;
+      margin: 1rem 0;
+      font-weight: bold;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      background: #42b883;
+      color: white;
+      transition: 0.2s ease;
+    }
+
+    button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    button.reset {
+      background: #35495e;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="card">
+      <h1>Vue Counter</h1>
+      <div class="count">{{ count }}</div>
+
+      <div class="buttons">
+        <button @click="count--">- Decrease</button>
+        <button @click="count++">+ Increase</button>
+        <button class="reset" @click="resetCounter">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          count: 0
+        };
+      },
+      methods: {
+        resetCounter() {
+          this.count = 0;
+        }
+      }
+    }).mount('#app');
+  </script>
+</body>
 </html>

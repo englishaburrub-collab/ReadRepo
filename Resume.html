@@ -669,6 +669,49 @@
 }
 
 @media print{ @page{size:A4;margin:14mm} body{background:white} nav{display:none} .resume-section{break-inside:auto;padding:14px 0} .section-heading{break-after:avoid} .resume-content,.resume-hero{border:0} .resume-hero{padding:0} .resume-page{padding:0} .summary-copy,.skills-grid,.education-list,.project-groups,.training-list,.strengths-list{padding-inline-start:0} .experience-list{padding-inline-start:0} .resume-footer{padding-top:8px} }
+  
+/* Sticky section navigation */
+.resume-page > nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 8px;
+  overflow-x: auto;
+  background: rgba(255,255,255,.96);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--resume-line);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(23,38,58,.08);
+  scrollbar-width: thin;
+}
+.resume-page > nav a {
+  flex: 0 0 auto;
+  padding: 10px 14px;
+  border-radius: 7px;
+  white-space: nowrap;
+  transition: background .15s, color .15s;
+}
+.resume-page > nav a:hover,
+.resume-page > nav a[aria-current="location"] {
+  background: var(--resume-tint);
+  color: rgb(var(--v-theme-primary));
+  text-decoration: none;
+}
+.resume-page > nav a[aria-current="location"] {
+  box-shadow: inset 0 -2px rgb(var(--v-theme-primary));
+}
+.resume-section { scroll-margin-top: calc(var(--nav-height, 64px) + 12px); }
+@media (max-width: 620px) {
+  .resume-page > nav { margin-top: 12px; padding: 5px; }
+  .resume-page > nav a { padding: 9px 11px; }
+}
+@media print { .resume-page > nav { display: none !important; } }
+
   </style>
  </head>
  <body>
@@ -1619,5 +1662,37 @@
     </a>
    </footer>
   </div>
+ 
+<script>
+(() => {
+  const nav = document.querySelector('.resume-page > nav');
+  const links = [...nav.querySelectorAll('a[href^="#"]')];
+  const sections = links.map(link => document.getElementById(link.hash.slice(1)));
+  function update() {
+    const height = nav.offsetHeight;
+    document.documentElement.style.setProperty('--nav-height', height + 'px');
+    let active = 0;
+    sections.forEach((section, i) => {
+      if (section && section.getBoundingClientRect().top <= height + 24) active = i;
+    });
+    if (window.scrollY > 0 && window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 3) active = links.length - 1;
+    links.forEach((link, i) => {
+      if (i === active) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+  }
+  let pending = false;
+  window.addEventListener('scroll', () => {
+    if (!pending) {
+      pending = true;
+      requestAnimationFrame(() => { update(); pending = false; });
+    }
+  }, { passive: true });
+  window.addEventListener('resize', update);
+  if ('ResizeObserver' in window) new ResizeObserver(update).observe(nav);
+  update();
+})();
+</script>
+
  </body>
 </html>
